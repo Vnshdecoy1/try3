@@ -1,1 +1,13 @@
-project_id = "kvmhhrwvvkqnatwxiard"
+ project_id = "kvmhhrwvvkqnatwxiard"
+ 
+ [functions.balance]
+ verify_jwt = false
+ 
+ [functions.notify]
+ verify_jwt = false
+ 
+ [functions.price]
+ verify_jwt = false
+ 
+ [functions.pricing]
+ verify_jwt = false
