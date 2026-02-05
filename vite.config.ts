@@ -12,6 +12,11 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
+  preview: {
+    host: true,
+    port: 81,
+    allowedHosts: ["loq-degen.dev", "www.loq-degen.dev", "178.128.40.67"],
+  },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
