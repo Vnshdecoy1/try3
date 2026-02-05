@@ -90,6 +90,8 @@ export const Navigation = () => {
     <>
       <CardNav
         items={cardNavItems}
+        logo="/logo.svg"
+        logoAlt="LOQ Degen"
         baseColor="hsl(var(--loq-card-bg) / 0.8)"
         menuColor="#FF9FFC"
         buttonBgColor="#5227FF"
