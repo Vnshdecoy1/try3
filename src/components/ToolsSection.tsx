@@ -1,15 +1,12 @@
-'use client';
-
-import React, { useState } from 'react';
-import PaymentModal from '../PaymentModal';
-import { TrendingUp, Zap, ArrowUp, Laptop, Flame, MessageSquare, Users, BarChart3, Radio, MessageCircle, Users2 } from 'lucide-react';
+import { useState } from 'react';
+import PaymentModal from './PaymentModal';
 
 const TOOLS_DATA = [
   {
     name: 'Dex Ranking',
     desc: 'Boost your token visibility across all major DEX platforms',
     gradient: 'from-cyan-500 to-blue-500',
-    icon: BarChart3,
+    icon: '📊',
     pricing: [
       { tier: 'Top 70-100', price: 2.5, emoji: '🔥' },
       { tier: 'Top 50-70', price: 3.5, emoji: '💎' },
@@ -25,7 +22,7 @@ const TOOLS_DATA = [
     name: 'Volume Boosters',
     desc: 'Increase trading volume to attract more investors',
     gradient: 'from-green-500 to-emerald-500',
-    icon: TrendingUp,
+    icon: '📈',
     customInput: true,
     isVolumeBooster: true,
     price: 1,
@@ -35,7 +32,7 @@ const TOOLS_DATA = [
     name: 'Bumps',
     desc: 'Keep your token trending at the top of listings',
     gradient: 'from-purple-500 to-pink-500',
-    icon: ArrowUp,
+    icon: '⬆️',
     pricing: [
       { tier: '9 Bumps/Min', speed: 9 },
       { tier: '18 Bumps/Min', speed: 18 },
@@ -64,7 +61,7 @@ const TOOLS_DATA = [
     name: 'Bundle Terminal',
     desc: 'All-in-one toolkit for your launch on Solana',
     gradient: 'from-yellow-500 to-orange-500',
-    icon: Laptop,
+    icon: '💻',
     pricing: [
       { tier: 'Lifetime Access', price: 200, emoji: '🚀' }
     ],
@@ -76,7 +73,7 @@ const TOOLS_DATA = [
     name: 'Phantom Trending',
     desc: 'Get featured in Phantom wallet trending section',
     gradient: 'from-indigo-500 to-purple-500',
-    icon: Flame,
+    icon: '⚡',
     pricing: [
       { tier: '6 Hours', price: 200, emoji: '💻' },
       { tier: '12 Hours', price: 370, emoji: '☄️' },
@@ -89,7 +86,7 @@ const TOOLS_DATA = [
     name: 'DEX Reactions',
     desc: 'Manage community engagement on DEX platforms',
     gradient: 'from-pink-500 to-rose-500',
-    icon: MessageSquare,
+    icon: '💬',
     pricing: [
       { tier: '100 votes', price: 8, emoji: '💬' },
       { tier: '500 votes', price: 30, emoji: '🔥' },
@@ -102,7 +99,7 @@ const TOOLS_DATA = [
     name: 'Holder Boost',
     desc: 'Increase holder count and distribution metrics',
     gradient: 'from-teal-500 to-cyan-500',
-    icon: Users2,
+    icon: '👥',
     pricing: [
       { tier: '100 Holders', price: 0.3, emoji: '👥' }
     ],
@@ -115,7 +112,7 @@ const TOOLS_DATA = [
     name: 'Chat Managers',
     desc: 'Professional chat moderation and community management',
     gradient: 'from-blue-500 to-indigo-500',
-    icon: MessageCircle,
+    icon: '💬',
     pricing: [
       { tier: '1 Week', price: 70, emoji: '💬' },
       { tier: '2 Weeks', price: 120, emoji: '👨‍💼' },
@@ -128,7 +125,7 @@ const TOOLS_DATA = [
     name: 'Raiders',
     desc: 'Coordinate strategic community raids for maximum impact',
     gradient: 'from-red-500 to-orange-500',
-    icon: Zap,
+    icon: '⚔️',
     pricing: [
       { tier: '1 Week', price: 120, emoji: '⚔️' },
       { tier: '2 Weeks', price: 210, emoji: '🔥' },
@@ -141,7 +138,7 @@ const TOOLS_DATA = [
     name: 'PF Stream Viewers',
     desc: 'Boost your Pump.Fun stream visibility with live viewers',
     gradient: 'from-violet-500 to-purple-500',
-    icon: Radio,
+    icon: '📺',
     pricing: [
       { tier: '50 Viewers', price: 1.5, emoji: '📹' },
       { tier: '200 Viewers', price: 5.0, emoji: '🎥' },
@@ -154,7 +151,7 @@ const TOOLS_DATA = [
     name: 'PF Comments',
     desc: 'Generate organic engagement on Pump.Fun listings',
     gradient: 'from-emerald-500 to-green-500',
-    icon: MessageSquare,
+    icon: '💬',
     pricing: [
       { tier: '1 Comment', price: 0.005, emoji: '💬' }
     ],
@@ -168,7 +165,7 @@ const TOOLS_DATA = [
     name: 'Phantom Group Chats',
     desc: 'Manage and grow your Phantom wallet community groups',
     gradient: 'from-fuchsia-500 to-pink-500',
-    icon: Users,
+    icon: '👥',
     pricing: [
       { tier: '1 Week', price: 70, emoji: '👥' },
       { tier: '2 Weeks', price: 120, emoji: '🚀' },
@@ -183,7 +180,7 @@ interface ToolsSectionProps {
   className?: string;
 }
 
-export const ToolsSection = ({ className = '' }: ToolsSectionProps) => {
+export default function ToolsSection({ className = '' }: ToolsSectionProps) {
   const [expandedTool, setExpandedTool] = useState<number | null>(null);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [selectedToolData, setSelectedToolData] = useState<any>(null);
@@ -198,7 +195,7 @@ export const ToolsSection = ({ className = '' }: ToolsSectionProps) => {
 
   const handleToolClick = (toolIndex: number) => {
     setExpandedTool(toolIndex);
-    setSelectedPricingTier(null);
+    setSelectedPricingTier(null); // Reset price selection when opening new tool
   };
 
   const handleGetStarted = (tool: any, pricingTier?: any) => {
@@ -208,7 +205,7 @@ export const ToolsSection = ({ className = '' }: ToolsSectionProps) => {
   };
 
   return (
-    <div id="tools" className={`w-full bg-gradient-to-b from-[#060010] to-[#0d0620] relative overflow-y-auto flex items-center justify-center ${className}`}>
+    <div className={`w-full bg-gradient-to-b from-[#060010] to-[#0d0620] relative overflow-y-auto flex items-center justify-center ${className}`}>
       <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8 px-4">
@@ -250,12 +247,8 @@ export const ToolsSection = ({ className = '' }: ToolsSectionProps) => {
                 <div className="absolute -left-6 -bottom-6 w-16 h-16 bg-purple-400/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
 
                 {/* Icon */}
-                <div className={`relative mb-3 text-cyan-400 group-hover:text-white transition-all duration-300 transform group-hover:scale-110 group-hover:rotate-3 flex-shrink-0`}>
-                  {typeof tool.icon === 'function' || tool.icon?.render ? (
-                    React.createElement(tool.icon, { className: "w-8 h-8" })
-                  ) : (
-                    <span className="text-4xl">{tool.icon}</span>
-                  )}
+                <div className={`relative mb-3 text-cyan-400 group-hover:text-white transition-all duration-300 transform group-hover:scale-110 group-hover:rotate-3 flex-shrink-0 text-4xl`}>
+                  {tool.icon}
                 </div>
 
                 {/* Title */}
@@ -501,4 +494,4 @@ export const ToolsSection = ({ className = '' }: ToolsSectionProps) => {
       </div>
     </div>
   );
-};
+}

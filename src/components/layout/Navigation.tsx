@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import CardNav from './CardNav';
+import PaymentModal from '../PaymentModal';
 
 const navItems = [
   { label: 'HOME', href: '#home' },
@@ -12,13 +12,21 @@ const navItems = [
 ];
 
 export const Navigation = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const [isJoinPaymentOpen, setIsJoinPaymentOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      // Update active section based on scroll position
+      const sections = navItems.map(item => item.href.replace('#', ''));
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            break;
+          }
+        }
+      }
     };
 
     // Debounced scroll handler
@@ -37,111 +45,72 @@ export const Navigation = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // IntersectionObserver for active section detection
-  useEffect(() => {
-    const sections = navItems.map(item => item.href.replace('#', ''));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.3, rootMargin: '-100px 0px -50% 0px' }
-    );
-
-    sections.forEach((section) => {
-      const element = document.getElementById(section);
-      if (element) observer.observe(element);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  const cardNavItems = [
+    {
+      label: 'WHAT I GET',
+      bgColor: '#0D0716',
+      textColor: '#fff',
+      links: [
+        { label: 'Lifetime Support', href: '#what-i-get', ariaLabel: 'View lifetime support details' },
+        { label: 'Token Building', href: '#what-i-get', ariaLabel: 'View token building features' }
+      ]
+    },
+    {
+      label: 'RESOURCES',
+      bgColor: '#170D27',
+      textColor: '#fff',
+      links: [
+        { label: 'Tools', href: '#tools', ariaLabel: 'View tools' },
+        { label: 'Journeys', href: '#journeys', ariaLabel: 'View journeys' }
+      ]
+    },
+    {
+      label: 'INFO',
+      bgColor: '#271E37',
+      textColor: '#fff',
+      links: [
+        { label: 'Profits', href: '#profits', ariaLabel: 'View profits section' },
+        { label: 'FAQs', href: '#faqs', ariaLabel: 'View FAQs' }
+      ]
     }
-    setIsMobileMenuOpen(false);
+  ];
+
+  const joinNowService = {
+    name: 'Exclusive Access',
+    desc: 'Get exclusive access to the LOQ Degen community',
+    icon: '🎯',
+    pricing: [
+      { id: '1project', name: '1 Project - Lifetime Support', tier: '1 Project - Lifetime Support', price: 400, emoji: '🚀' },
+      { id: '2projects', name: '2 Projects - Lifetime Support', tier: '2 Projects - Lifetime Support', price: 600, emoji: '💎' },
+      { id: '4projects', name: '4 Projects - Lifetime Support', tier: '4 Projects - Lifetime Support', price: 1000, emoji: '👑' }
+    ]
   };
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
-          isScrolled ? 'top-2' : 'top-4'
-        }`}
-      >
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-1 glass-card rounded-full px-2 py-2">
-          {navItems.map((item) => (
-            <button
-              key={item.label}
-              onClick={() => scrollToSection(item.href)}
-              className={`nav-pill ${
-                activeSection === item.href.replace('#', '') ? 'active' : ''
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
+      <CardNav
+        items={cardNavItems}
+        baseColor="hsl(var(--loq-card-bg) / 0.8)"
+        menuColor="#FF9FFC"
+        buttonBgColor="#5227FF"
+        buttonTextColor="#fff"
+        ease="power3.out"
+        theme="dark"
+        className="backdrop-blur-md"
+      />
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden glass-card rounded-full p-3"
-          aria-label="Toggle menu"
-        >
-          {isMobileMenuOpen ? (
-            <X className="w-6 h-6 text-foreground" />
-          ) : (
-            <Menu className="w-6 h-6 text-foreground" />
-          )}
-        </button>
-      </motion.nav>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl md:hidden"
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ delay: 0.1 }}
-              className="flex flex-col items-center justify-center h-full gap-6"
-            >
-              {navItems.map((item, index) => (
-                <motion.button
-                  key={item.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + index * 0.05 }}
-                  onClick={() => scrollToSection(item.href)}
-                  className={`text-2xl font-medium transition-colors ${
-                    activeSection === item.href.replace('#', '')
-                      ? 'gradient-text'
-                      : 'text-foreground/70 hover:text-foreground'
-                  }`}
-                >
-                  {item.label}
-                </motion.button>
-              ))}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* JOIN NOW Payment Modal */}
+      <PaymentModal
+        isOpen={isJoinPaymentOpen}
+        onClose={() => setIsJoinPaymentOpen(false)}
+        selectedService={joinNowService}
+        userDetails={{
+          ca: '',
+          email: '',
+          xUsername: '',
+          tgUsername: ''
+        }}
+      />
     </>
   );
 };

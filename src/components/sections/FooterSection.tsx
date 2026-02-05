@@ -1,6 +1,7 @@
 import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Instagram, Twitter, Send } from 'lucide-react';
+import PaymentModal from '../PaymentModal';
 
 const footerLinks = [
   { label: 'Home', href: '#home' },
@@ -26,6 +27,20 @@ const testimonialQuotes = [
 export const FooterSection = () => {
   const footerRef = useRef(null);
   const isInView = useInView(footerRef, { once: true, margin: '-50px' });
+  const [isJoinPaymentOpen, setIsJoinPaymentOpen] = useState(false);
+
+  const joinNowService = {
+    name: 'Exclusive Access',
+    desc: 'Get exclusive access to the LOQ Degen community',
+    icon: '🎯',
+    pricing: [
+      { id: '1project', name: '1 Project - Lifetime Support', tier: '1 Project - Lifetime Support', price: 400, emoji: '🚀' },
+      { id: '2projects', name: '2 Projects - Lifetime Support', tier: '2 Projects - Lifetime Support', price: 600, emoji: '💎' },
+      { id: '4projects', name: '4 Projects - Lifetime Support', tier: '4 Projects - Lifetime Support', price: 1000, emoji: '👑' }
+    ],
+    usdPricing: true,
+    fullDesc: 'Unlock exclusive access to the LOQ Degen community. Get lifetime support for each project, everything from token building to deploy, full project management, and 24/7 team support.'
+  };
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
@@ -111,7 +126,10 @@ export const FooterSection = () => {
             <p className="text-muted-foreground text-sm mb-4">
               Join the waitlist for exclusive early access and special pricing.
             </p>
-            <button className="btn-gradient px-6 py-3 rounded-xl text-white font-semibold">
+            <button 
+              onClick={() => setIsJoinPaymentOpen(true)}
+              className="btn-gradient px-6 py-3 rounded-xl text-white font-semibold cursor-pointer hover:opacity-90 transition-opacity"
+            >
               Join Now
             </button>
           </motion.div>
@@ -128,6 +146,19 @@ export const FooterSection = () => {
             © {new Date().getFullYear()} LOQ Degen. All rights reserved.
           </p>
         </motion.div>
+
+        {/* JOIN NOW Payment Modal */}
+        <PaymentModal
+          isOpen={isJoinPaymentOpen}
+          onClose={() => setIsJoinPaymentOpen(false)}
+          selectedService={joinNowService}
+          userDetails={{
+            ca: '',
+            email: '',
+            xUsername: '',
+            tgUsername: ''
+          }}
+        />
       </div>
     </footer>
   );
