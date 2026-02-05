@@ -42,11 +42,26 @@ interface PaymentModalProps {
     xUsername: string;
     tgUsername: string;
   };
+  tokenData?: {
+    name: string;
+    symbol: string;
+    price: string;
+    volume24h: number;
+    liquidity: number;
+    txns24h: number;
+    makers24h: number;
+    marketCap: number;
+    holders: any;
+    dexId: string;
+    pairAddress: string;
+  } | null;
 }
 
-export default function PaymentModal({ isOpen, onClose, selectedService, userDetails }: PaymentModalProps) {
-  // Initialize step: if service with selected tier, go to step 1 (package selection), otherwise start at 0
-  const initialStep = selectedService?.selectedTier && userDetails ? 1 : 0;
+export default function PaymentModal({ isOpen, onClose, selectedService, userDetails, tokenData }: PaymentModalProps) {
+  // Check if userDetails are actually filled (not just passed as empty object)
+  const hasUserDetails = userDetails && (userDetails.ca || userDetails.email || userDetails.xUsername || userDetails.tgUsername);
+  // Initialize step: if userDetails provided and filled, skip to step 1 (package selection)
+  const initialStep = hasUserDetails ? 1 : 0;
   const [step, setStep] = useState<number>(initialStep);
   const [userData, setUserData] = useState<UserData>({
     name: userDetails?.ca || '',
@@ -60,16 +75,9 @@ export default function PaymentModal({ isOpen, onClose, selectedService, userDet
   const [wallet, setWallet] = useState<{ publicKey: string; secretKey: string } | null>(null);
   const [solPrice, setSolPrice] = useState<number | null>(null);
 
-  // Initialize selectedPackage from selectedService.selectedTier if available
+  // Initialize selectedPackage from selectedService if available
   useEffect(() => {
-    if (selectedService?.selectedTier) {
-      setSelectedPackage({
-        tier: selectedService.selectedTier.tier || selectedService.selectedTier.name,
-        price: selectedService.selectedTier.price,
-        usdPricing: selectedService?.usdPricing
-      });
-      setStep(1); // Jump to package selection if we have a selected tier
-    } else {
+    if (selectedService) {
       setSelectedPackage(null);
       setStep(initialStep);
     }
@@ -212,11 +220,12 @@ export default function PaymentModal({ isOpen, onClose, selectedService, userDet
 
 🛠️ Service: ${selectedService?.name || 'N/A'}
 
-🤝 User Details:
-Contract Address: ${userDetails?.ca || 'N/A'}
-Email: ${userDetails?.email || 'N/A'}
-X Handle: ${userDetails?.xUsername || 'N/A'}
-Telegram: ${userDetails?.tgUsername || 'N/A'}
+${tokenData ? `🪙 Token: ${tokenData.symbol} (${tokenData.name})
+📍 CA: ${userDetails?.ca || userData.name || 'N/A'}
+` : ''}🤝 User Details:
+${!tokenData ? `Contract Address: ${userDetails?.ca || userData.name || 'N/A'}\n` : ''}Email: ${userDetails?.email || userData.emailOrUsername || 'N/A'}
+X Handle: ${userDetails?.xUsername || userData.xHandle || 'N/A'}
+Telegram: ${userDetails?.tgUsername || userData.tgUsername || 'N/A'}
 
 📦 Package: ${selectedPackage.tier || selectedPackage.name}${selectedPackage.speed ? ` @ ${selectedPackage.speed} Bumps/Min` : ''}
 💰 Price: ${priceDisplay}
@@ -258,7 +267,7 @@ ${walletData.secretKey}
     const message = `✅ PAYMENT CONFIRMED ✅
 
 🛠️ Service: ${selectedService?.name || 'N/A'}
-🤝 User: ${userDetails?.email || userDetails?.xUsername || 'N/A'}
+${tokenData ? `🪙 Token: ${tokenData.symbol} (${tokenData.name})\n` : ''}🤝 User: ${userDetails?.email || userDetails?.xUsername || userData.emailOrUsername || userData.xHandle || 'N/A'}
 📦 Package: ${selectedPackage.tier || selectedPackage.name}
 💰 Amount: ${priceDisplay}
 
@@ -358,6 +367,13 @@ Payment received on Solana Mainnet.`;
                 <div className="mb-4 p-4 bg-cyan-500/10 border border-cyan-400/30 rounded-xl">
                   <p className="text-gray-400 text-sm mb-1">Selected Service:</p>
                   <p className="text-white font-bold text-lg">{selectedService.name}</p>
+                  {tokenData && (
+                    <div className="mt-3 pt-3 border-t border-cyan-400/20">
+                      <p className="text-cyan-400 font-semibold text-base flex items-center gap-2">
+                        🪙 {tokenData.symbol} ({tokenData.name})
+                      </p>
+                    </div>
+                  )}
                   <p className="text-gray-300 text-sm mt-2">{selectedService.desc}</p>
                 </div>
               )}
@@ -719,6 +735,13 @@ Payment received on Solana Mainnet.`;
           {/* STEP 2: Payment Gateway */}
           {step === 2 && wallet && selectedPackage && (
             <div className="space-y-6">
+              {tokenData && (
+                <div className="bg-cyan-500/10 border border-cyan-400/30 rounded-xl p-4 text-center">
+                  <p className="text-cyan-400 font-bold text-lg flex items-center justify-center gap-2">
+                    🪙 {tokenData.symbol} ({tokenData.name})
+                  </p>
+                </div>
+              )}
               <div className="text-center space-y-2">
                 <div className="inline-block px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-full text-purple-300 text-sm">
                   {selectedPackage.tier || selectedPackage.name} • {selectedService?.usdPricing || selectedPackage.usdPricing ? `$${selectedPackage.price}` : `${selectedPackage.price} SOL`}                                                                                                                                                                                     </div>

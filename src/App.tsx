@@ -16,22 +16,30 @@ const App = () => {
   useEffect(() => {
     // The loading screen will auto-complete after its duration
     // This is just a fallback in case something goes wrong
-  }, []);
+    console.log('App mounted, isLoading:', isLoading);
+  }, [isLoading]);
+
+  const handleLoadingComplete = () => {
+    console.log('Loading complete, showing content');
+    setIsLoading(false);
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+      <BrowserRouter>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
+          {!isLoading && (
+            <Routes>
+              <Route path="/" element={<Index />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          )}
+        </TooltipProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   );
 };

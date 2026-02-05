@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Navigation } from '@/components/layout/Navigation';
 import { HeroSection } from '@/components/sections/HeroSection';
 
@@ -18,8 +18,13 @@ const SectionLoader = () => (
 );
 
 const Index = () => {
+  useEffect(() => {
+    console.log('Index page mounted');
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      {console.log('Rendering Index page')}
       {/* Navigation */}
       <Navigation />
 
