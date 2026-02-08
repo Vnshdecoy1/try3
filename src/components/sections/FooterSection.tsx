@@ -13,9 +13,9 @@ const footerLinks = [
 ];
 
 const socialLinks = [
-  { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
-  { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
-  { icon: Send, href: 'https://t.me', label: 'Telegram' },
+  { icon: Instagram, href: 'https://www.instagram.com/loqdegen/', label: 'Instagram' },
+  { icon: Twitter, href: 'https://x.com/LOQDegen', label: 'X' },
+  { icon: Send, href: 'https://t.me/LOQ_Support', label: 'Telegram' },
 ];
 
 const testimonialQuotes = [

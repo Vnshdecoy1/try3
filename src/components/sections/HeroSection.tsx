@@ -145,7 +145,7 @@ export const HeroSection = () => {
                 </div>
 
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/loqdegen/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-muted-foreground hover:text-loq-pink transition-colors"
